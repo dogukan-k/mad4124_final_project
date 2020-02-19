@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -63,8 +64,23 @@ public class ShowNotesController extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                ShowNotesController.this.arrayAdapter.getFilter().filter(charSequence);
-                Log.d("tag", "onTextChanged: "+arrayList.size());
+
+                //ShowNotesController.this.arrayAdapter.getFilter().filter(charSequence);
+
+
+                ArrayList<Item> tempArrayList = new ArrayList<>();
+                for(int x = 0 ; x<arrayList.size() ; x++){
+
+
+                    if(arrayList.get(x).getTitle().contains(charSequence) || arrayList.get(x).getContent().contains(charSequence)){
+                        tempArrayList.add(arrayList.get(x));
+                    }
+                }
+
+                arrayAdapter = new ArrayAdapter(ShowNotesController.this,android.R.layout.simple_list_item_1,tempArrayList);
+                listView.setAdapter(arrayAdapter);
+
+
                 isSearchFinished=false;
             }
 
@@ -72,7 +88,10 @@ public class ShowNotesController extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
 
                 if(editable.toString().equals("")){
+                    arrayAdapter = new ArrayAdapter(ShowNotesController.this,android.R.layout.simple_list_item_1,arrayList);
+                    listView.setAdapter(arrayAdapter);
                     isSearchFinished=true;
+
                 }
 
             }
@@ -127,6 +146,7 @@ public class ShowNotesController extends AppCompatActivity {
         if(arrayList != null){
             arrayAdapter = new ArrayAdapter(ShowNotesController.this,android.R.layout.simple_list_item_1,arrayList);
             listView.setAdapter(arrayAdapter);
+
         }
 
 
